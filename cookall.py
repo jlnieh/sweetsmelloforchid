@@ -7,12 +7,28 @@ __version__ = "0.0.1"
 
 import os
 import sys
+import shutil
 import argparse
 
 SOURCES=('vol01', 'vol02')
+BUILD_FOLDER='build'
+DIST_FOLDER='dist'
+
+def prepare_folders(build_dir):
+    if not os.path.isdir(BUILD_FOLDER):
+        os.makedirs(BUILD_FOLDER)
+    if not os.path.isdir(DIST_FOLDER):
+        os.makedirs(DIST_FOLDER)
+    if os.path.isdir(build_dir):
+        shutil.rmtree(build_dir)
+    os.makedirs(build_dir)
 
 def cook_book(vol):
-    pass
+    build_dir = os.path.join(BUILD_FOLDER, vol)
+    target_fn = os.path.join(DIST_FOLDER, vol + '.epub')
+
+    prepare_folders(build_dir)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Add elements to the repo')
