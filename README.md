@@ -1,2 +1,2 @@
-# sweetsmelloforchid
-Project to compile the EPUB of poetry volumes
+# 蘭畹清芬電子詩集製作計畫
+這計畫預備幫聶懋戡先生已出版的兩本詩集進行電子化。
