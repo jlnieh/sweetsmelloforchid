@@ -30,10 +30,12 @@ CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
     </rootfiles>
 </container>""".format(FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
 
-BOOK_ITEMS = [
-    ('toc', 'nav.xhtml', 'application/xhtml+xml', 'nav'),                   # <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+BOOK_PREDEFINED_ITEMS = (
+    ('toc', FILENAME_NAV, 'application/xhtml+xml', 'nav'),                   # <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     # ('cover', 'img/00_cover-front.jpg', 'image/jpeg', 'cover-image'),       # <item id="cover" href="img/mahabharata.jpg" media-type="image/jpeg" properties="cover-image"/>
-]
+)
+
+BOOK_ITEMS = []
 
 def prepare_folders(build_dir):
     if not os.path.isdir(FOLDER_BUILD):
@@ -103,6 +105,9 @@ def package_book(build_dir, target_fn):
     os.rename(zip_fname, epub_fname)
 
 def cook_book(vol):
+    del BOOK_ITEMS[:]
+    BOOK_ITEMS.extend(BOOK_PREDEFINED_ITEMS)
+
     build_dir = os.path.join(FOLDER_BUILD, vol)
     prepare_folders(build_dir)
     prepare_mimetype(build_dir)
@@ -115,11 +120,16 @@ def cook_book(vol):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Add elements to the repo')
-    parser.add_argument('volumes', choices=SOURCES, nargs='+',
+    parser.add_argument('-v', '--volume', dest='volumes', choices=SOURCES, action='append',
                     help='select one or more volumes to build (default: %(default)s)')
     args = parser.parse_args()
 
-    for vol in args.volumes:
+    if (args.volumes is None) or (len(args.volumes) == 0):
+        VOL_LIST = SOURCES
+    else:
+        VOL_LIST = args.volumes
+    for vol in VOL_LIST:
+        print(vol)
         if os.path.isdir(vol):
             cook_book(vol)
         else:
