@@ -69,10 +69,26 @@ def prepare_fixtures(src_vol, build_dir):
                 os.makedirs(dest_folder)
             shutil.copy(path_src, path_dest)
 
+PATTERN_PAGETITLE='<title></title>'
+def convert_doc(fname_src, fname_template, build_dir, fname_base):
+    fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
+
+    str_pagetitle = ''
+    with open(fname_src, 'r', encoding='utf-8') as fin:
+        for line in fin:
+            if line.startswith('## '):
+                str_pagetitle = line[3:].strip()
+
+
+    with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
+        for line in fin:
+            if line.find(PATTERN_PAGETITLE) >= 0:
+                line = line.replace(PATTERN_PAGETITLE, '<title>' + str_pagetitle + '</title>')
+            fout.write(line)
+
 def generate_docs(src_vol, build_dir):
     path_src_root = os.path.join(src_vol, FOLDER_CONTENTS)
     fname_template = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_CONTENT_TEMPLATE)
-    path_dest_root = os.path.join(build_dir, FOLDER_BOOKROOT)
 
     for root, dirs, files in os.walk(path_src_root):
         for fname in files:
@@ -80,12 +96,14 @@ def generate_docs(src_vol, build_dir):
             if '.md' != fext:
                 continue
             BOOK_ITEMS.append(fbase)
+            convert_doc(os.path.join(root, fname), fname_template, build_dir, fbase + '.xhtml')
+
     BOOK_ITEMS.sort()
 
 def generate_toc(src_vol, build_dir):
     pass
 
-CONSTSTR_MODIFIEDDATETIME = '<meta property="dcterms:modified"></meta>'
+PATTERN_MODIFIEDDATETIME = '<meta property="dcterms:modified"></meta>'
 def generate_opf(src_vol, build_dir):
     str_now = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='seconds')
     str_items = ''
@@ -98,8 +116,8 @@ def generate_opf(src_vol, build_dir):
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
     with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
-            if line.find(CONSTSTR_MODIFIEDDATETIME) >= 0:
-                line = line.replace(CONSTSTR_MODIFIEDDATETIME, '<meta property="dcterms:modified">' + str_now + '</meta>')
+            if line.find(PATTERN_MODIFIEDDATETIME) >= 0:
+                line = line.replace(PATTERN_MODIFIEDDATETIME, '<meta property="dcterms:modified">' + str_now + '</meta>')
             elif line.find('</manifest>') >= 0:
                 fout.write(str_items)
             elif line.find('</spine>') >= 0:
