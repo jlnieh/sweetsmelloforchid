@@ -8,6 +8,7 @@ __version__ = "0.0.1"
 import os
 import sys
 import shutil
+import datetime
 import argparse
 import zipfile
 
@@ -17,10 +18,13 @@ FOLDER_BUILD='build'
 FOLDER_RELEASE='dist'
 FOLDER_METAINFO='META-INF'
 FOLDER_BOOKROOT='EPUB'
+FOLDER_CONTENTS='contents'
+FOLDER_TEMPLATES='templates'
+
+FILENAME_CONTENT_TEMPLATE='content.xhtml'
 FILENAME_PACKAGEOPF='package.opf'
-FILENAME_NAV='nav.xhtml'
-FILEPATH_PACKAGEOPF=os.path.join(FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
-FILEPATH_NAV=os.path.join(FOLDER_BOOKROOT, FILENAME_NAV)
+# FILENAME_NAV='nav.xhtml'
+# FILEPATH_NAV=os.path.join(FOLDER_BOOKROOT, FILENAME_NAV)
 
 CONSTSTR_MIMETYPE='application/epub+zip'
 CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
@@ -55,7 +59,7 @@ def prepare_metainfo(build_dir):
 
 def prepare_fixtures(src_vol, build_dir):
     for root, dirs, files in os.walk(src_vol):
-        dirs[:] = [d for d in dirs if (d != 'content')]
+        dirs[:] = [d for d in dirs if d not in (FOLDER_CONTENTS, FOLDER_TEMPLATES)]
         for fname in files:
             path_src = os.path.join(root, fname)
             rel_pathname = os.path.relpath(path_src, src_vol)
@@ -65,14 +69,42 @@ def prepare_fixtures(src_vol, build_dir):
                 os.makedirs(dest_folder)
             shutil.copy(path_src, path_dest)
 
-def generate_docs(build_dir):
+def generate_docs(src_vol, build_dir):
+    path_src_root = os.path.join(src_vol, FOLDER_CONTENTS)
+    fname_template = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_CONTENT_TEMPLATE)
+    path_dest_root = os.path.join(build_dir, FOLDER_BOOKROOT)
+
+    for root, dirs, files in os.walk(path_src_root):
+        for fname in files:
+            (fbase, fext) = os.path.splitext(fname)
+            if '.md' != fext:
+                continue
+            BOOK_ITEMS.append(fbase)
+    BOOK_ITEMS.sort()
+
+def generate_toc(src_vol, build_dir):
     pass
 
-def generate_toc(build_dir):
-    pass
+CONSTSTR_MODIFIEDDATETIME = '<meta property="dcterms:modified"></meta>'
+def generate_opf(src_vol, build_dir):
+    str_now = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='seconds')
+    str_items = ''
+    str_itemref = ''
+    for item in BOOK_ITEMS:
+        str_items += '        <item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>\n'.format(item)
+        str_itemref += '        <itemref idref="{0}"/>\n'.format(item)
 
-def generate_opf(build_dir):
-    print(BOOK_ITEMS)
+    fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_PACKAGEOPF)
+    fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
+    with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
+        for line in fin:
+            if line.find(CONSTSTR_MODIFIEDDATETIME) >= 0:
+                line = line.replace(CONSTSTR_MODIFIEDDATETIME, '<meta property="dcterms:modified">' + str_now + '</meta>')
+            elif line.find('</manifest>') >= 0:
+                fout.write(str_items)
+            elif line.find('</spine>') >= 0:
+                fout.write(str_itemref)
+            fout.write(line)
 
 def package_book(build_dir, target_fn):
     base_fname = os.path.join(FOLDER_RELEASE, target_fn)
@@ -86,6 +118,10 @@ def package_book(build_dir, target_fn):
 
     shutil.make_archive(base_fname, 'zip', build_dir)
     os.rename(zip_fname, epub_fname)
+    return epub_fname
+
+def verify_book(epub_fname):
+    pass
 
 def cook_book(vol):
     del BOOK_ITEMS[:]
@@ -94,10 +130,11 @@ def cook_book(vol):
     prepare_mimetype(build_dir)
     prepare_metainfo(build_dir)
     prepare_fixtures(vol, build_dir)
-    generate_docs(build_dir)
-    generate_toc(build_dir)
-    generate_opf(build_dir)
-    package_book(build_dir, vol)
+    generate_docs(vol, build_dir)
+    generate_toc(vol, build_dir)
+    generate_opf(vol, build_dir)
+    epub_fname = package_book(build_dir, vol)
+    verify_book(epub_fname)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Add elements to the repo')
@@ -110,7 +147,6 @@ if __name__ == '__main__':
     else:
         VOL_LIST = args.volumes
     for vol in VOL_LIST:
-        print(vol)
         if os.path.isdir(vol):
             cook_book(vol)
         else:
