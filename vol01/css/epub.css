@@ -1,0 +1,64 @@
+@namespace epub "http://www.idpf.org/2007/ops";
+
+body {
+    font-family: arial,sans-serif;
+    margin: 5% 5% 5% 5%;
+    text-align: justify;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+
+h2 {
+    page-break-before: always;
+    padding-top: 1em
+}
+
+p {
+    margin-top: 0.75em;
+    text-align: justify;
+    text-indent: 2em;
+    margin-bottom: 0.75em
+}
+
+.center {
+    text-align: center
+}
+.smcap {
+    font-variant: small-caps
+}
+.poem {
+    margin-left: 30%;
+    margin-right: 10%;
+    text-align: left
+}
+.title {
+    text-indent: 1em;
+    letter-spacing: 1em
+}
+.subtitle {
+    page-break-before: avoid;
+    padding-top: 0;
+    padding-bottom: 1em;
+}
+.signature {
+    text-align: right;
+}
+.signature-date {
+    text-align: right;
+    font-size: smaller;
+}
+
+h4.publisher {
+    float: bottom;
+    margin-top: 0;
+    margin-bottom: 0
+}
+h5.publisher-date {
+	float: bottom;
+}
+div.logo {
+    margin-top: 10em;
+    margin-bottom: 10em;
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:identifier id="uid">3e7fe305-3871-4c59-b088-b78448c2c983</dc:identifier>
+        <dc:language>zh-CN</dc:language>
+        <dc:title>蘭畹清芬</dc:title>
+        <meta property="dcterms:modified"></meta>
+    </metadata>
+    <manifest>
+        <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
+        <item href="img/cover-front.jpg" id="cover-front-img" media-type="image/jpeg" properties="cover-image"/>
+        <item href="img/cover-full.jpg" id="cover-full-img" media-type="image/jpeg"/>
+        <item href="css/epub.css" id="css01" media-type="text/css"/>
+		<item href="css/nav.css" id="css02" media-type="text/css"/>
+        <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
+        <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
+    </manifest>
+    <spine>
+        <itemref idref="cover-front" linear="no"/>
+        <itemref idref="title" linear="yes"/>
+        <itemref idref="toc" linear="yes"/>
+    </spine>
+</package>

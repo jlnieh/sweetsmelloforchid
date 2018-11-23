@@ -30,11 +30,6 @@ CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
     </rootfiles>
 </container>""".format(FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
 
-BOOK_PREDEFINED_ITEMS = (
-    ('toc', FILENAME_NAV, 'application/xhtml+xml', 'nav'),                   # <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
-    # ('cover', 'img/00_cover-front.jpg', 'image/jpeg', 'cover-image'),       # <item id="cover" href="img/mahabharata.jpg" media-type="image/jpeg" properties="cover-image"/>
-)
-
 BOOK_ITEMS = []
 
 def prepare_folders(build_dir):
@@ -59,9 +54,8 @@ def prepare_metainfo(build_dir):
         fout.write(CONSTSTR_METAINFO)
 
 def prepare_fixtures(src_vol, build_dir):
-    fixure_id = 0
     for root, dirs, files in os.walk(src_vol):
-        dirs[:] = [d for d in dirs if (d != 'doc')]
+        dirs[:] = [d for d in dirs if (d != 'content')]
         for fname in files:
             path_src = os.path.join(root, fname)
             rel_pathname = os.path.relpath(path_src, src_vol)
@@ -70,17 +64,6 @@ def prepare_fixtures(src_vol, build_dir):
             if not os.path.isdir(dest_folder):
                 os.makedirs(dest_folder)
             shutil.copy(path_src, path_dest)
-
-            fixure_id += 1
-            rel_pathname = rel_pathname.replace("\\", "/")
-            if rel_pathname.startswith('img/00'):
-                BOOK_ITEMS.append(('cover', rel_pathname, 'image/jpeg', 'cover-image'))
-            elif rel_pathname.startswith('img/'):
-                BOOK_ITEMS.append(("img{0:03}".format(fixure_id), rel_pathname, 'image/jpeg', None))
-            elif rel_pathname.startswith('css/'):
-                BOOK_ITEMS.append(("css{0:03}".format(fixure_id), rel_pathname, 'text/css', None))
-            else:
-                raise Exception("Unknown file types included: {0}".format(rel_pathname))
 
 def generate_docs(build_dir):
     pass
@@ -106,8 +89,6 @@ def package_book(build_dir, target_fn):
 
 def cook_book(vol):
     del BOOK_ITEMS[:]
-    BOOK_ITEMS.extend(BOOK_PREDEFINED_ITEMS)
-
     build_dir = os.path.join(FOLDER_BUILD, vol)
     prepare_folders(build_dir)
     prepare_mimetype(build_dir)
