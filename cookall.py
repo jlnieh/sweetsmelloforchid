@@ -30,6 +30,11 @@ CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
     </rootfiles>
 </container>""".format(FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
 
+BOOK_ITEMS = [
+    ('toc', 'nav.xhtml', 'application/xhtml+xml', 'nav'),                   # <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    # ('cover', 'img/00_cover-front.jpg', 'image/jpeg', 'cover-image'),       # <item id="cover" href="img/mahabharata.jpg" media-type="image/jpeg" properties="cover-image"/>
+]
+
 def prepare_folders(build_dir):
     if not os.path.isdir(FOLDER_BUILD):
         os.makedirs(FOLDER_BUILD)
@@ -51,8 +56,29 @@ def prepare_metainfo(build_dir):
     with open(outfn, 'w') as fout:
         fout.write(CONSTSTR_METAINFO)
 
-def prepare_fixtures(build_dir):
-    pass
+def prepare_fixtures(src_vol, build_dir):
+    fixure_id = 0
+    for root, dirs, files in os.walk(src_vol):
+        dirs[:] = [d for d in dirs if (d != 'doc')]
+        for fname in files:
+            path_src = os.path.join(root, fname)
+            rel_pathname = os.path.relpath(path_src, src_vol)
+            path_dest = os.path.join(build_dir, FOLDER_BOOKROOT, rel_pathname)
+            dest_folder = os.path.dirname(path_dest)
+            if not os.path.isdir(dest_folder):
+                os.makedirs(dest_folder)
+            shutil.copy(path_src, path_dest)
+
+            fixure_id += 1
+            rel_pathname = rel_pathname.replace("\\", "/")
+            if rel_pathname.startswith('img/00'):
+                BOOK_ITEMS.append(('cover', rel_pathname, 'image/jpeg', 'cover-image'))
+            elif rel_pathname.startswith('img/'):
+                BOOK_ITEMS.append(("img{0:03}".format(fixure_id), rel_pathname, 'image/jpeg', None))
+            elif rel_pathname.startswith('css/'):
+                BOOK_ITEMS.append(("css{0:03}".format(fixure_id), rel_pathname, 'text/css', None))
+            else:
+                raise Exception("Unknown file types included: {0}".format(rel_pathname))
 
 def generate_docs(build_dir):
     pass
@@ -61,7 +87,7 @@ def generate_toc(build_dir):
     pass
 
 def generate_opf(build_dir):
-    pass
+    print(BOOK_ITEMS)
 
 def package_book(build_dir, target_fn):
     base_fname = os.path.join(FOLDER_RELEASE, target_fn)
@@ -81,7 +107,7 @@ def cook_book(vol):
     prepare_folders(build_dir)
     prepare_mimetype(build_dir)
     prepare_metainfo(build_dir)
-    prepare_fixtures(build_dir)
+    prepare_fixtures(vol, build_dir)
     generate_docs(build_dir)
     generate_toc(build_dir)
     generate_opf(build_dir)
