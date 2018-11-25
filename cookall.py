@@ -110,7 +110,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><span class="poem-date">{2}</span></header>""".format(localHeaderId, poemTitle, posmDate)
+                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitle, posmDate)
                 curPara.append('article')
             elif line.startswith('##### '):
                 poemTitle = line[6:]
