@@ -6,6 +6,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     text-align: center;
+    page-break-after: avoid;
 }
 
 h2 {
@@ -20,9 +21,6 @@ p {
     margin-bottom: 0.75em;
 }
 
-article {
-    page-break-inside: avoid;
-}
 header h3.poem-title {
     margin-bottom: 0;
 }

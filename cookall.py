@@ -69,7 +69,7 @@ def prepare_fixtures(src_vol, build_dir):
                 os.makedirs(dest_folder)
             shutil.copy(path_src, path_dest)
 
-PATTERN_PAGETITLE='<title></title>'
+
 def splitSubHeader(line):
     subHeaderPos = line.find('    ')
     if (subHeaderPos > 0):
@@ -77,6 +77,8 @@ def splitSubHeader(line):
     else:
         return (line, '')
 
+PATTERN_PAGETITLE='<!--PAGE_TITLE-->'
+PATTERN_PAGEBODY='<!--PAGE_BODY-->'
 def convert_doc(fname_src, fname_template, build_dir, fname_base):
     fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
 
@@ -134,9 +136,9 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
     with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_PAGETITLE) >= 0:
-                line = line.replace(PATTERN_PAGETITLE, '<title>' + pageTitle + '</title>')
-            elif line.find('</body>') >= 0:
-                fout.write(strContent)
+                line = line.replace(PATTERN_PAGETITLE, pageTitle)
+            elif line.find(PATTERN_PAGEBODY) >= 0:
+                line = line.replace(PATTERN_PAGEBODY, strContent)
             fout.write(line)
 
 def generate_docs(src_vol, build_dir):
@@ -153,58 +155,62 @@ def generate_docs(src_vol, build_dir):
 
     BOOK_ITEMS.sort()
 
+PATTERN_TOC = '<!--TOC-->'
 def generate_toc(src_vol, build_dir):
     str_items = ''
     cur_lvl = 0
     for item in TOC_ITEMS:
         if item[2] > cur_lvl:
             if cur_lvl > 0:
-                indentSpace = ' ' * (cur_lvl * 2 + 12)
-                str_items += '\n' + indentSpace + '<ol>\n'
+                indentSpace = '\n' + ' ' * (cur_lvl * 2 + 12)
+                str_items += indentSpace + '<ol>'
         elif item[2] < cur_lvl:
-            indentSpace = ' ' * (item[2] * 2 + 12)
-            str_items += '</li>\n' + indentSpace + '</ol>\n'
+            indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
+            str_items += '</li>' + indentSpace + '</ol>'
         else:
-            str_items += '</li>\n'
-        indentSpace = ' ' * (item[2] * 2 + 12)
+            str_items += '</li>'
+        indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
         str_items += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
         cur_lvl = item[2]
     if 2 == cur_lvl:
-        str_items += '</li>\n'
+        str_items += '</li>'
     else:   # 4 == cur_lvl
-        indentSpace = ' ' * 16
-        str_items += '</li>\n' + indentSpace  + '</ol></li>\n'
+        indentSpace = '\n' +  ' ' * 16
+        str_items += '</li>' + indentSpace  + '</ol></li>'
 
-    is_inserted = False
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_NAV)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_NAV)
     with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
-            if (not is_inserted) and line.find('</ol>') >= 0:
-                fout.write(str_items)
-                is_inserted = True
+            if line.find(PATTERN_TOC) >= 0:
+                line = line.replace(PATTERN_TOC, str_items)
             fout.write(line)
 
-CONSTR_8SPACES=' ' * 8
-PATTERN_MODIFIEDDATETIME = '<meta property="dcterms:modified"></meta>'
+PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
+PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
+PATTERN_SPINE = '<!--LIST_SPINE-->'
 def generate_opf(src_vol, build_dir):
     str_now = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='seconds')
     str_items = ''
     str_itemref = ''
     for item in BOOK_ITEMS:
-        str_items += CONSTR_8SPACES + '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>\n'.format(item)
-        str_itemref += CONSTR_8SPACES + '<itemref idref="{0}"/>\n'.format(item)
+        if '' == str_items:
+            lineHeader = ''
+        else:
+            lineHeader = '\n' + ' ' * 8
+        str_items += lineHeader + '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>'.format(item)
+        str_itemref += lineHeader + '<itemref idref="{0}"/>'.format(item)
 
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_PACKAGEOPF)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
     with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_MODIFIEDDATETIME) >= 0:
-                line = line.replace(PATTERN_MODIFIEDDATETIME, '<meta property="dcterms:modified">' + str_now + '</meta>')
-            elif line.find('</manifest>') >= 0:
-                fout.write(str_items)
-            elif line.find('</spine>') >= 0:
-                fout.write(str_itemref)
+                line = line.replace(PATTERN_MODIFIEDDATETIME, str_now)
+            elif line.find(PATTERN_MANIFEST) >= 0:
+                line = line.replace(PATTERN_MANIFEST, str_items)
+            elif line.find(PATTERN_SPINE) >= 0:
+                line = line.replace(PATTERN_SPINE, str_itemref)
             fout.write(line)
 
 def package_book(build_dir, target_fn):

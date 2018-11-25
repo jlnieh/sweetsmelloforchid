@@ -4,7 +4,7 @@
         <dc:identifier id="uid">3e7fe305-3871-4c59-b088-b78448c2c983</dc:identifier>
         <dc:language>zh-CN</dc:language>
         <dc:title>蘭畹清芬</dc:title>
-        <meta property="dcterms:modified"></meta>
+        <meta property="dcterms:modified"><!--DATE_MODIFIED--></meta>
     </metadata>
     <manifest>
         <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
@@ -15,11 +15,13 @@
         <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>
         <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
         <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
+        <!--LIST_MANIFEST-->
     </manifest>
     <spine>
         <itemref idref="cover-front" linear="no"/>
-        <itemref idref="cover-full" linear="no"/>
         <itemref idref="title"/>
         <itemref idref="toc"/>
+        <!--LIST_SPINE-->
+        <itemref idref="cover-full" linear="yes"/>
     </spine>
 </package>
