@@ -70,6 +70,13 @@ def prepare_fixtures(src_vol, build_dir):
             shutil.copy(path_src, path_dest)
 
 PATTERN_PAGETITLE='<title></title>'
+def splitSubHeader(line):
+    subHeaderPos = line.find('    ')
+    if (subHeaderPos > 0):
+        return (line[:subHeaderPos], line[subHeaderPos+4:])
+    else:
+        return (line, '')
+
 def convert_doc(fname_src, fname_template, build_dir, fname_base):
     fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
 
@@ -78,25 +85,51 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
     pg_id = fname_base[0:3]
     h2_id = 0
     h4_id = 0
+    curPara = []
     with open(fname_src, 'r', encoding='utf-8') as fin:
         for line in fin:
-            if line.startswith('## '):
-                pageTitle = line[3:].strip()
-
+            line = line.rstrip()
+            if len(line) == 0:
+                if(len(curPara)>0):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+            elif line.startswith('## '):
+                (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
                 h2_id += 1
                 localHeaderId = '{0}h2{1:02}'.format(pg_id, h2_id)
                 TOC_ITEMS.append((fname_base, localHeaderId, 2, pageTitle))
                 h4_id = 0
+
+                while(len(curPara)>0):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+                strContent += """<header><h2 id="{0}">{1}</h2>{2}</header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
             elif line.startswith('#### '):
-                poemTitle = line[5:].strip()
-                datePos = poemTitle.find('    ')
-                if (datePos > 0):
-                    poemPubDate = poemTitle[datePos+4:]
-                    poemTitle = poemTitle[:datePos]
+                (poemTitle, posmDate) = splitSubHeader(line[5:])
                 h4_id += 1
                 localHeaderId = '{0}h4{1:02}{2:03}'.format(pg_id, h2_id, h4_id)
                 TOC_ITEMS.append((fname_base, localHeaderId, 4, poemTitle))
 
+                while(len(curPara)>0):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><span class="poem-date">{2}</span></header>""".format(localHeaderId, poemTitle, posmDate)
+                curPara.append('article')
+            elif line.startswith('##### '):
+                poemTitle = line[6:]
+
+                if(len(curPara)>1):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+                strContent += '<h4>{0}</h4>'.format(poemTitle)
+            elif line.startswith('> '):
+                if(len(curPara)<2):
+                    strContent += '<p class="poem">'
+                    curPara.append('p')
+                strContent += line[2:]
+            else:
+                if(len(curPara)<1):
+                    strContent += '<p>'
+                    curPara.append('p')
+                strContent += line
+    while(len(curPara)>0):
+        strContent += '</{0}>\n'.format(curPara.pop())
 
     with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:

@@ -12,30 +12,48 @@ h1, h2, h3, h4, h5, h6 {
 
 h2 {
     page-break-before: always;
-    padding-top: 1em
+    padding-top: 1em;
 }
 
 p {
     margin-top: 0.75em;
     text-align: justify;
     text-indent: 2em;
-    margin-bottom: 0.75em
+    margin-bottom: 0.75em;
+}
+
+header {
+    position: relative;
+}
+header h3.poem-title {
+    z-index: 1;
+}
+header span.poem-date {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+header p {
+    text-indent: 0;
 }
 
 .center {
-    text-align: center
+    text-align: center;
 }
 .smcap {
-    font-variant: small-caps
+    font-variant: small-caps;
 }
 .poem {
-    margin-left: 30%;
+    margin-left: 10%;
     margin-right: 10%;
-    text-align: left
+    text-align: left;
+    text-indent: 0;
 }
+
 .title {
     text-indent: 1em;
-    letter-spacing: 1em
+    letter-spacing: 1em;
 }
 .subtitle {
     page-break-before: avoid;
@@ -43,18 +61,21 @@ p {
     padding-bottom: 1em;
 }
 .signature {
+    float: right;
     text-align: right;
 }
 .signature-date {
+    clear: right;
+    float: right;
     text-align: right;
     font-size: smaller;
 }
 
-h4.publisher {
+#title-page h4.publisher {
     float: bottom;
     margin-top: 0;
-    margin-bottom: 0
+    margin-bottom: 0;
 }
-h5.publisher-date {
+#title-page h5.publisher-date {
 	float: bottom;
 }
