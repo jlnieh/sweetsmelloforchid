@@ -21,6 +21,9 @@ p {
     margin-bottom: 0.75em;
 }
 
+header {
+    page-break-after: avoid;
+}
 header h3.poem-title {
     margin-bottom: 0;
 }
