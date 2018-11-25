@@ -23,8 +23,7 @@ FOLDER_TEMPLATES='templates'
 
 FILENAME_CONTENT_TEMPLATE='content.xhtml'
 FILENAME_PACKAGEOPF='package.opf'
-# FILENAME_NAV='nav.xhtml'
-# FILEPATH_NAV=os.path.join(FOLDER_BOOKROOT, FILENAME_NAV)
+FILENAME_NAV='nav.xhtml'
 
 CONSTSTR_MIMETYPE='application/epub+zip'
 CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
@@ -35,6 +34,7 @@ CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
 </container>""".format(FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
 
 BOOK_ITEMS = []
+TOC_ITEMS = []
 
 def prepare_folders(build_dir):
     if not os.path.isdir(FOLDER_BUILD):
@@ -73,17 +73,37 @@ PATTERN_PAGETITLE='<title></title>'
 def convert_doc(fname_src, fname_template, build_dir, fname_base):
     fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
 
-    str_pagetitle = ''
+    pageTitle = ''
+    strContent = ''
+    pg_id = fname_base[0:3]
+    h2_id = 0
+    h4_id = 0
     with open(fname_src, 'r', encoding='utf-8') as fin:
         for line in fin:
             if line.startswith('## '):
-                str_pagetitle = line[3:].strip()
+                pageTitle = line[3:].strip()
+
+                h2_id += 1
+                localHeaderId = '{0}h2{1:02}'.format(pg_id, h2_id)
+                TOC_ITEMS.append((fname_base, localHeaderId, 2, pageTitle))
+                h4_id = 0
+            elif line.startswith('#### '):
+                poemTitle = line[5:].strip()
+                datePos = poemTitle.find('    ')
+                if (datePos > 0):
+                    poemPubDate = poemTitle[datePos+4:]
+                    poemTitle = poemTitle[:datePos]
+                h4_id += 1
+                localHeaderId = '{0}h4{1:02}{2:03}'.format(pg_id, h2_id, h4_id)
+                TOC_ITEMS.append((fname_base, localHeaderId, 4, poemTitle))
 
 
     with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_PAGETITLE) >= 0:
-                line = line.replace(PATTERN_PAGETITLE, '<title>' + str_pagetitle + '</title>')
+                line = line.replace(PATTERN_PAGETITLE, '<title>' + pageTitle + '</title>')
+            elif line.find('</body>') >= 0:
+                fout.write(strContent)
             fout.write(line)
 
 def generate_docs(src_vol, build_dir):
@@ -101,16 +121,46 @@ def generate_docs(src_vol, build_dir):
     BOOK_ITEMS.sort()
 
 def generate_toc(src_vol, build_dir):
-    pass
+    str_items = ''
+    cur_lvl = 0
+    for item in TOC_ITEMS:
+        if item[2] > cur_lvl:
+            if cur_lvl > 0:
+                indentSpace = ' ' * (cur_lvl * 2 + 12)
+                str_items += '\n' + indentSpace + '<ol>\n'
+        elif item[2] < cur_lvl:
+            indentSpace = ' ' * (item[2] * 2 + 12)
+            str_items += '</li>\n' + indentSpace + '</ol>\n'
+        else:
+            str_items += '</li>\n'
+        indentSpace = ' ' * (item[2] * 2 + 12)
+        str_items += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
+        cur_lvl = item[2]
+    if 2 == cur_lvl:
+        str_items += '</li>\n'
+    else:   # 4 == cur_lvl
+        indentSpace = ' ' * 16
+        str_items += '</li>\n' + indentSpace  + '</ol></li>\n'
 
+    is_inserted = False
+    fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_NAV)
+    fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_NAV)
+    with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
+        for line in fin:
+            if (not is_inserted) and line.find('</ol>') >= 0:
+                fout.write(str_items)
+                is_inserted = True
+            fout.write(line)
+
+CONSTR_8SPACES=' ' * 8
 PATTERN_MODIFIEDDATETIME = '<meta property="dcterms:modified"></meta>'
 def generate_opf(src_vol, build_dir):
     str_now = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='seconds')
     str_items = ''
     str_itemref = ''
     for item in BOOK_ITEMS:
-        str_items += '        <item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>\n'.format(item)
-        str_itemref += '        <itemref idref="{0}"/>\n'.format(item)
+        str_items += CONSTR_8SPACES + '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>\n'.format(item)
+        str_itemref += CONSTR_8SPACES + '<itemref idref="{0}"/>\n'.format(item)
 
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_PACKAGEOPF)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
@@ -143,6 +193,8 @@ def verify_book(epub_fname):
 
 def cook_book(vol):
     del BOOK_ITEMS[:]
+    del TOC_ITEMS[:]
+
     build_dir = os.path.join(FOLDER_BUILD, vol)
     prepare_folders(build_dir)
     prepare_mimetype(build_dir)
