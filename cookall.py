@@ -10,6 +10,7 @@ import sys
 import shutil
 import datetime
 import argparse
+import re
 import zipfile
 from subprocess import call
 
@@ -82,6 +83,7 @@ def splitSubHeader(line):
 
 PATTERN_PAGETITLE='<!--PAGE_TITLE-->'
 PATTERN_PAGEBODY='<!--PAGE_BODY-->'
+PATTERN_FOOTNOTE=re.compile(r'\[(\d+)\]')
 def convert_doc(fname_src, fname_template, build_dir, fname_base):
     fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
 
@@ -123,11 +125,18 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 if(len(curPara)>1):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += '<h4>{0}</h4>'.format(poemTitle)
+            elif line.startswith('['):
+                if(len(curPara)>0):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+                pos = line.find('] ')
+                note_id = int(line[1:pos])
+                note_str = line[pos+2:]
+                strContent += '<aside id="n{0}" epub:type="footnote">{1}</aside>'.format(note_id, note_str)
             elif line.startswith('> '):
                 if(len(curPara)<2):
                     strContent += '<p class="poem">'
                     curPara.append('p')
-                strContent += line[2:]
+                strContent += PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', line[2:])
             else:
                 if(len(curPara)<1):
                     strContent += '<p>'
