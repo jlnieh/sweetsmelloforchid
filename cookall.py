@@ -199,6 +199,7 @@ def generate_toc(src_vol, build_dir):
             fout.write(line)
 
 PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
+PATTERN_BOOKVERSION = '<!--BOOK_VERSION-->'
 PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
 PATTERN_SPINE = '<!--LIST_SPINE-->'
 def generate_opf(src_vol, build_dir):
@@ -219,6 +220,8 @@ def generate_opf(src_vol, build_dir):
         for line in fin:
             if line.find(PATTERN_MODIFIEDDATETIME) >= 0:
                 line = line.replace(PATTERN_MODIFIEDDATETIME, str_now)
+            elif line.find(PATTERN_BOOKVERSION) >= 0:
+                line = line.replace(PATTERN_BOOKVERSION, '1.0.0')
             elif line.find(PATTERN_MANIFEST) >= 0:
                 line = line.replace(PATTERN_MANIFEST, str_items)
             elif line.find(PATTERN_SPINE) >= 0:
@@ -226,10 +229,13 @@ def generate_opf(src_vol, build_dir):
             fout.write(line)
 
 def package_book(build_dir, target_fn):
+    today = datetime.date.today()
+    rel_fname = "ssoo{0}_r{1:04}{2:02}{3:02}.epub".format(target_fn[-1], today.year, today.month, today.day)
+
     ret_dir = os.getcwd()
     os.chdir(build_dir)
 
-    epub_fname = os.path.join(ret_dir, FOLDER_RELEASE, target_fn + '.epub')
+    epub_fname = os.path.join(ret_dir, FOLDER_RELEASE, rel_fname)
     if os.path.isfile(epub_fname):
         os.remove(epub_fname)
 
