@@ -190,7 +190,7 @@ PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
 PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
 PATTERN_SPINE = '<!--LIST_SPINE-->'
 def generate_opf(src_vol, build_dir):
-    str_now = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='seconds')
+    str_now = datetime.datetime.utcnow().isoformat(timespec='seconds') + 'Z'
     str_items = ''
     str_itemref = ''
     for item in BOOK_ITEMS:
