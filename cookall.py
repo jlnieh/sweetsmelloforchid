@@ -126,7 +126,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += '<h4>{0}</h4>'.format(poemTitle)
             elif line.startswith('['):
-                if(len(curPara)>0):
+                if(len(curPara)>0) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 pos = line.find('] ')
                 note_id = int(line[1:pos])

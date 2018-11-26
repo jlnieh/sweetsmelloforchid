@@ -23,6 +23,18 @@
         <meta refines="#creator02" property="role" scheme="marc:relators">pfr</meta>
         <meta refines="#creator02" property="display-seq">2</meta>
 
+        <dc:contributor id="cont01">何锡圭</dc:contributor>
+        <meta refines="#cont01" property="role" scheme="marc:relators">rev</meta>
+        <dc:contributor id="cont02">刘卓鲜</dc:contributor>
+        <meta refines="#cont02" property="role" scheme="marc:relators">rev</meta>
+        <dc:contributor id="cont03">于萍</dc:contributor>
+        <meta refines="#cont03" property="role" scheme="marc:relators">edt</meta>
+        <dc:contributor id="cont04">余农治</dc:contributor>
+        <meta refines="#cont04" property="role" scheme="marc:relators">cov</meta>
+        <dc:contributor id="cont05">蒋祖全</dc:contributor>
+        <meta refines="#cont05" property="role" scheme="marc:relators">cov</meta>
+
+        <dc:publisher>中国人民政治协商会议四川省内江市委员会文史资料委员会</dc:publisher>
         <dc:date>1994-09-01T00:00:00Z</dc:date>
     </metadata>
     <manifest>
