@@ -11,6 +11,9 @@ import shutil
 import datetime
 import argparse
 import zipfile
+from subprocess import call
+
+TOOL_EPUBCHECK=os.path.join('tools', 'epubcheck', 'epubcheck.jar')
 
 SOURCES=('vol01', 'vol02')
 
@@ -214,21 +217,33 @@ def generate_opf(src_vol, build_dir):
             fout.write(line)
 
 def package_book(build_dir, target_fn):
-    base_fname = os.path.join(FOLDER_RELEASE, target_fn)
-    zip_fname = base_fname + '.zip'
-    epub_fname = os.path.join(FOLDER_RELEASE, target_fn + '.epub')
+    ret_dir = os.getcwd()
+    os.chdir(build_dir)
 
-    if os.path.isfile(zip_fname):
-        os.remove(zip_fname)
+    epub_fname = os.path.join(ret_dir, FOLDER_RELEASE, target_fn + '.epub')
     if os.path.isfile(epub_fname):
         os.remove(epub_fname)
 
-    shutil.make_archive(base_fname, 'zip', build_dir)
-    os.rename(zip_fname, epub_fname)
+    with zipfile.ZipFile(epub_fname, mode='w') as zfout:
+        for root, dirs, files in os.walk('.'):
+            for fname in files:
+                src_file = os.path.join(root, fname)
+                print('Adding {0} into EPUB...'.format(src_file))
+                zfout.write(src_file)
+
+    os.chdir(ret_dir)
     return epub_fname
 
 def verify_book(epub_fname):
-    pass
+    run_cmd = ['java', '-jar', TOOL_EPUBCHECK, epub_fname]
+    if os.path.isdir(epub_fname):
+        run_cmd.append('-mode', 'exp')
+    # print(run_cmd)
+    ret = call(run_cmd)
+    if 0 == ret:
+        print("EPUB <{0}> is verified OK!".format(epub_fname))
+    else:
+        raise Exception("Failed to verify the EPUB file: {0}".format(epub_fname))
 
 def cook_book(vol):
     del BOOK_ITEMS[:]
