@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0">
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0" xml:lang="zh-CN" prefix="rendition: http://www.idpf.org/vocab/rendition/#">
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-        <dc:identifier id="uid">3e7fe305-3871-4c59-b088-b78448c2c983</dc:identifier>
-        <dc:language>zh-CN</dc:language>
-        <dc:title>蘭畹清芬</dc:title>
+        <dc:identifier id="uid">urn:uuid:3e7fe305-3871-4c59-b088-b78448c2c983</dc:identifier>
         <meta property="dcterms:modified"><!--DATE_MODIFIED--></meta>
+        <dc:language>zh-CN</dc:language>
+
+        <dc:title id="t1">蘭畹清芬</dc:title>
+        <meta refines="#t1" property="title-type">main</meta>
+		<meta refines="#t1" property="display-seq">1</meta>
+
+        <dc:title id="t2">聂懋戡诗词初集</dc:title>
+		<meta refines="#t2" property="title-type">subtitle</meta>
+		<meta refines="#t2" property="display-seq">2</meta>
+
+        <dc:creator id="creator01">聂懋戡</dc:creator>
+		<meta property="file-as" refines="#creator01">Nieh, Mao-Kan</meta>
+        <meta refines="#creator01" property="role" scheme="marc:relators">aut</meta>
+        <meta refines="#creator01" property="display-seq">1</meta>
+
+		<dc:creator id="creator02">官福光</dc:creator>
+		<meta property="file-as" refines="#creator02">Guan, Fu-Guang</meta>
+        <meta refines="#creator02" property="role" scheme="marc:relators">pfr</meta>
+        <meta refines="#creator02" property="display-seq">2</meta>
+
+        <dc:date>1994-09-01T00:00:00Z</dc:date>
     </metadata>
     <manifest>
         <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
@@ -22,6 +41,6 @@
         <itemref idref="title"/>
         <itemref idref="toc"/>
         <!--LIST_SPINE-->
-        <itemref idref="cover-full" linear="yes"/>
+        <itemref idref="cover-full" properties="rendition:layout-pre-paginated rendition:orientation-landscape rendition:spread-none"/>
     </spine>
 </package>

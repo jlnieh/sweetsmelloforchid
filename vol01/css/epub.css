@@ -73,3 +73,11 @@ header p {
 #title-page h5.publisher-date {
 	float: bottom;
 }
+
+body.fixed, img.full {
+    width:1920px;
+    margin: 0;
+    padding: 0;
+    top: 0px;
+    left: 0px;
+}
