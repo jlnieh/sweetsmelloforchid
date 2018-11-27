@@ -178,15 +178,13 @@ def generate_toc(src_vol, build_dir):
                 str_items += indentSpace + '<ol>'
         elif item[2] < cur_lvl:
             indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
-            str_items += '</li>' + indentSpace + '</ol>'
+            str_items += '</li>' + indentSpace + '</ol></li>'
         else:
             str_items += '</li>'
         indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
         str_items += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
         cur_lvl = item[2]
-    if 2 == cur_lvl:
-        str_items += '</li>'
-    else:   # 4 == cur_lvl
+    if 4 == cur_lvl:
         indentSpace = '\n' +  ' ' * 16
         str_items += '</li>' + indentSpace  + '</ol></li>'
 
