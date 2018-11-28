@@ -14,5 +14,5 @@
 to-do......
 
 ## 著作授權 (License)
-本計畫的著作授權分為兩部分，聶懋戡先生詩集的部分採用「[創用 CC 姓名標示 3.0 台灣 授權條款](https://creativecommons.org/licenses/by/3.0/tw//)」；用來製作與產生電子書的軟體程式則採用 [MIT license](LICENSE.md)。
-[![創用 CC 姓名標示 3.0 台灣 授權條款](https://i.creativecommons.org/l/by/3.0/tw/88x31.png)](https://creativecommons.org/licenses/by/3.0/tw//)
+本計畫的著作授權分為兩部分，聶懋戡先生詩集的部分採用「[![創用 CC 姓名標示 3.0 台灣 授權條款](https://i.creativecommons.org/l/by/3.0/tw/88x31.png)](https://creativecommons.org/licenses/by/3.0/tw//) [創用 CC 姓名標示 3.0 台灣 授權條款](https://creativecommons.org/licenses/by/3.0/tw//)」；用來製作與產生電子書的軟體程式則採用 [MIT license](LICENSE.md)。
+
