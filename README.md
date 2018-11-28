@@ -1,3 +1,6 @@
+[![Current Release](https://img.shields.io/github/release/jlnieh/sweetsmelloforchid.svg)](https://github.com/jlnieh/sweetsmelloforchid/releases/latest)
+[![Github All Releases Downloads](https://img.shields.io/github/downloads/jlnieh/sweetsmelloforchid/total.svg?colorB=A9A9A9)](https://github.com/jlnieh/sweetsmelloforchid/releases/)
+
 # 蘭畹清芬電子詩集製作計畫
 這計畫預備幫聶懋戡先生已出版的兩本「蘭畹清芬」詩集進行電子化。
 
@@ -11,7 +14,10 @@
 最新版的 EPUB 成品下載網頁：[releases page](https://github.com/jlnieh/sweetsmelloforchid/releases)
 
 ## 製作 EPUB
-to-do......
+'''
+cookall.py -v vol01
+cookall.py -v vol02
+'''
 
 ## 著作授權 (License)
 本計畫的著作授權分為兩部分，聶懋戡先生詩集的部分採用 [![創用 CC 姓名標示 3.0 台灣 授權條款](https://i.creativecommons.org/l/by/3.0/tw/88x31.png)](https://creativecommons.org/licenses/by/3.0/tw//) 「[創用 CC 姓名標示 3.0 台灣 授權條款](https://creativecommons.org/licenses/by/3.0/tw//)」；用來製作與產生電子書的軟體程式則採用 [MIT license](LICENSE)。
