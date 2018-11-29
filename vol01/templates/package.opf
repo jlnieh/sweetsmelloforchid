@@ -15,7 +15,7 @@
         <meta refines="#t2" property="title-type">subtitle</meta>
         <meta refines="#t2" property="display-seq">2</meta>
 
-        <dc:title id="t3">蘭畹清芬－聂懋戡诗词初集</dc:title>
+        <dc:title id="t3">蘭畹清芬──聂懋戡诗词初集</dc:title>
         <meta refines="#t3" property="title-type">extend</meta>
         <meta refines="#t3" property="display-seq">3</meta>
 

@@ -97,7 +97,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
         for line in fin:
             line = line.rstrip()
             if len(line) == 0:
-                if(len(curPara)>0):
+                if(len(curPara)>0) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
             elif line.startswith('## '):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
@@ -122,7 +122,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
             elif line.startswith('##### '):
                 poemTitle = line[6:]
 
-                if(len(curPara)>1):
+                if(len(curPara)>1) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += '<h4>{0}</h4>'.format(poemTitle)
             elif line.startswith('['):
