@@ -178,15 +178,13 @@ def generate_toc(src_vol, build_dir):
                 str_items += indentSpace + '<ol>'
         elif item[2] < cur_lvl:
             indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
-            str_items += '</li>' + indentSpace + '</ol>'
+            str_items += '</li>' + indentSpace + '</ol></li>'
         else:
             str_items += '</li>'
         indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
         str_items += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
         cur_lvl = item[2]
-    if 2 == cur_lvl:
-        str_items += '</li>'
-    else:   # 4 == cur_lvl
+    if 4 == cur_lvl:
         indentSpace = '\n' +  ' ' * 16
         str_items += '</li>' + indentSpace  + '</ol></li>'
 
@@ -199,6 +197,7 @@ def generate_toc(src_vol, build_dir):
             fout.write(line)
 
 PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
+PATTERN_BOOKVERSION = '<!--BOOK_VERSION-->'
 PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
 PATTERN_SPINE = '<!--LIST_SPINE-->'
 def generate_opf(src_vol, build_dir):
@@ -219,6 +218,8 @@ def generate_opf(src_vol, build_dir):
         for line in fin:
             if line.find(PATTERN_MODIFIEDDATETIME) >= 0:
                 line = line.replace(PATTERN_MODIFIEDDATETIME, str_now)
+            elif line.find(PATTERN_BOOKVERSION) >= 0:
+                line = line.replace(PATTERN_BOOKVERSION, '1.0.0')
             elif line.find(PATTERN_MANIFEST) >= 0:
                 line = line.replace(PATTERN_MANIFEST, str_items)
             elif line.find(PATTERN_SPINE) >= 0:
@@ -226,10 +227,13 @@ def generate_opf(src_vol, build_dir):
             fout.write(line)
 
 def package_book(build_dir, target_fn):
+    today = datetime.date.today()
+    rel_fname = "ssoo{0}_r{1:04}{2:02}{3:02}.epub".format(target_fn[-1], today.year, today.month, today.day)
+
     ret_dir = os.getcwd()
     os.chdir(build_dir)
 
-    epub_fname = os.path.join(ret_dir, FOLDER_RELEASE, target_fn + '.epub')
+    epub_fname = os.path.join(ret_dir, FOLDER_RELEASE, rel_fname)
     if os.path.isfile(epub_fname):
         os.remove(epub_fname)
 

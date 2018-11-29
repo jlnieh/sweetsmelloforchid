@@ -35,7 +35,15 @@ header p.poem-date {
 header p {
     text-indent: 0;
 }
-
+aside {
+    margin-top: 0em;
+    margin-bottom: 0.75em;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: left;
+    font-size: smaller;
+    display: list-item;
+}
 .center {
     text-align: center;
 }
@@ -74,10 +82,18 @@ header p {
 	float: bottom;
 }
 
-body.fixed, img.full {
-    width:1920px;
+body.fixed, img.full, img.cover {
     margin: 0;
     padding: 0;
     top: 0px;
     left: 0px;
+}
+body.fixed {
+    adobe-page-master: fullpage;
+}
+img.cover {
+    height: 100vh;
+}
+img.full {
+    width: 100%;
 }
