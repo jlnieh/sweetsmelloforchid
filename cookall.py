@@ -113,11 +113,18 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 (poemTitle, posmDate) = splitSubHeader(line[5:])
                 h4_id += 1
                 localHeaderId = '{0}h4{1:02}{2:03}'.format(pg_id, h2_id, h4_id)
+
+                m = PATTERN_FOOTNOTE.search(poemTitle)
+                if m:
+                    poemTitleDisp = PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', poemTitle)
+                    poemTitle = PATTERN_FOOTNOTE.sub(r'', poemTitle)
+                else:
+                    poemTitleDisp = poemTitle
                 TOC_ITEMS.append((fname_base, localHeaderId, 4, poemTitle))
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitle, posmDate)
+                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitleDisp, posmDate)
                 curPara.append('article')
             elif line.startswith('##### '):
                 poemTitle = line[6:]
