@@ -49,7 +49,6 @@
         <item href="img/cover-full.jpg" id="cover-full-img" media-type="image/jpeg"/>
         <item href="css/epub.css" id="css01" media-type="text/css"/>
         <item href="css/nav.css" id="css02" media-type="text/css"/>
-        <item id="page-template" href="css/page-template.xpgt" media-type="application/adobe-page-template+xml"/>
         <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>
         <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
         <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
