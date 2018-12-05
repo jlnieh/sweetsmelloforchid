@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0" xml:lang="zh-CN"
+        prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <dc:identifier id="uid">urn:uuid:2aae1692-5f0f-4969-999f-ee6efef87c7f</dc:identifier>
+        <meta property="dcterms:modified"><!--DATE_MODIFIED--></meta>
+        <meta property="ibooks:version">0.0.1</meta>
+        <dc:language>zh-CN</dc:language>
+
+        <dc:title id="t1">蘭畹清芬</dc:title>
+        <meta refines="#t1" property="title-type">main</meta>
+        <meta refines="#t1" property="display-seq">1</meta>
+
+        <dc:title id="t2">聂懋戡诗词续集</dc:title>
+        <meta refines="#t2" property="title-type">subtitle</meta>
+        <meta refines="#t2" property="display-seq">2</meta>
+        
+        <dc:title id="t3">官福光《新华吟草》</dc:title>
+        <meta refines="#t3" property="title-type">subtitle</meta>
+        <meta refines="#t3" property="display-seq">3</meta>
+
+        <dc:title id="t4">蘭畹清芬（续集）</dc:title>
+        <meta refines="#t4" property="title-type">extend</meta>
+        <meta refines="#t4" property="display-seq">4</meta>
+
+        <dc:creator id="creator01">聂懋戡</dc:creator>
+        <meta property="file-as" refines="#creator01">Nieh, Mao-Kan</meta>
+        <meta refines="#creator01" property="role" scheme="marc:relators">aut</meta>
+        <meta refines="#creator01" property="display-seq">1</meta>
+
+        <dc:creator id="creator02">官福光</dc:creator>
+        <meta property="file-as" refines="#creator02">Guan, Fu-Guang</meta>
+        <meta refines="#creator02" property="role" scheme="marc:relators">aut</meta>
+        <meta refines="#creator02" property="display-seq">2</meta>
+
+        <dc:publisher>四川省内江市诗词楹联学会</dc:publisher>
+        <dc:date>1998-06-30T08:00:00Z</dc:date>
+    </metadata>
+    <manifest>
+        <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
+        <item href="img/cover-front.jpg" id="cover-front-img" media-type="image/jpeg" properties="cover-image"/>
+        <item href="img/cover-full.jpg" id="cover-full-img" media-type="image/jpeg"/>
+        <item href="css/epub.css" id="css01" media-type="text/css"/>
+        <item href="css/nav.css" id="css02" media-type="text/css"/>
+        <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>
+        <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
+        <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
+        <!--LIST_MANIFEST-->
+    </manifest>
+    <spine>
+        <itemref idref="cover-front" linear="no"/>
+        <itemref idref="title"/>
+        <itemref idref="toc"/>
+        <!--LIST_SPINE-->
+        <itemref idref="cover-full" properties="rendition:layout-pre-paginated rendition:orientation-landscape rendition:spread-none"/>
+    </spine>
+</package>
