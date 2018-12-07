@@ -110,7 +110,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += """<header><h2 id="{0}">{1}</h2>{2}</header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
             elif line.startswith('#### '):
-                (poemTitle, posmDate) = splitSubHeader(line[5:])
+                (poemTitle, poemDate) = splitSubHeader(line[5:])
                 h4_id += 1
                 localHeaderId = '{0}h4{1:02}{2:03}'.format(pg_id, h2_id, h4_id)
 
@@ -124,14 +124,16 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitleDisp, posmDate)
+                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitleDisp, poemDate)
                 curPara.append('article')
             elif line.startswith('##### '):
-                poemTitle = line[6:]
+                (poemTitle, poemDate) = splitSubHeader(line[6:])
 
                 if(len(curPara)>1) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += '<h4>{0}</h4>'.format(poemTitle)
+                strContent += '<h4 class="poem-title">{0}</h4>'.format(poemTitle)
+                if len(poemDate) > 0:
+                    strContent += '<p class="poem-date">{0}</p>'.format(poemDate)
             elif line.startswith('['):
                 if(len(curPara)>0) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
