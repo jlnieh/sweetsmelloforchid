@@ -129,6 +129,9 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
             elif line.startswith('##### '):
                 (poemTitle, poemDate) = splitSubHeader(line[6:])
 
+                m = PATTERN_FOOTNOTE.search(poemTitle)
+                if m:
+                    poemTitle = PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', poemTitle)
                 if(len(curPara)>1) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += '<h4 class="poem-title">{0}</h4>'.format(poemTitle)
