@@ -84,6 +84,7 @@ def splitSubHeader(line):
 PATTERN_PAGETITLE='<!--PAGE_TITLE-->'
 PATTERN_PAGEBODY='<!--PAGE_BODY-->'
 PATTERN_FOOTNOTE=re.compile(r'\[(\d+)\]')
+PATTERN_DATE=re.compile(r'^[\d]+')
 def convert_doc(fname_src, fname_template, build_dir, fname_base):
     fname_dest = os.path.join(build_dir, FOLDER_BOOKROOT, fname_base)
 
@@ -109,6 +110,8 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += """<header><h2 id="{0}">{1}</h2>{2}</header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
+            elif line.startswith('### '):
+                strContent += """<h3>{0}</h3>\n""".format(line[4:])
             elif line.startswith('#### '):
                 (poemTitle, poemDate) = splitSubHeader(line[5:])
                 h4_id += 1
@@ -120,11 +123,24 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                     poemTitle = PATTERN_FOOTNOTE.sub(r'', poemTitle)
                 else:
                     poemTitleDisp = poemTitle
+
+                if len(poemDate) > 0:
+                    m = PATTERN_DATE.search(poemDate)
+                    if m:
+                        strPoemSub = '<p class="poem-date">{0}</p>'.format(poemDate)
+                    else:
+                        strPoemSub = '<p class="poem-author">{0}</p>'.format(poemDate)
+                        poemTitle = '附{0}君《{1}》'.format(poemDate[0], poemTitle)
+                else:
+                    strPoemSub = ''
+
                 TOC_ITEMS.append((fname_base, localHeaderId, 4, poemTitle))
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3><p class="poem-date">{2}</p></header>""".format(localHeaderId, poemTitleDisp, poemDate)
+
+
+                strContent += """<article id="{0}"><header><h3 class="poem-title">{1}</h3>{2}</header>""".format(localHeaderId, poemTitleDisp, strPoemSub)
                 curPara.append('article')
             elif line.startswith('##### '):
                 (poemTitle, poemDate) = splitSubHeader(line[6:])
@@ -136,7 +152,11 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                     strContent += '</{0}>\n'.format(curPara.pop())
                 strContent += '<h4 class="poem-title">{0}</h4>'.format(poemTitle)
                 if len(poemDate) > 0:
-                    strContent += '<p class="poem-date">{0}</p>'.format(poemDate)
+                    m = PATTERN_DATE.search(poemDate)
+                    if m:
+                        strContent += '<p class="poem-date">{0}</p>'.format(poemDate)
+                    else:
+                        strContent += '<p class="poem-author">{0}</p>'.format(poemDate)
             elif line.startswith('['):
                 if(len(curPara)>0) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
