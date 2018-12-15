@@ -30,6 +30,12 @@ header {
 .poem-subtitle {
     margin-top: 0;
 }
+.poem-author {
+    text-align: right;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 0;
+}
 .poem-date {
     text-align: right;
     font-size: smaller;
