@@ -219,6 +219,8 @@ def generate_toc(src_vol, build_dir):
     if 4 == cur_lvl:
         indentSpace = '\n' +  ' ' * 16
         str_items += '</li>' + indentSpace  + '</ol></li>'
+    elif 2 == cur_lvl:
+        str_items += '</li>'
     if '' == str_items:
         str_items = '<li><a>No title</a></li>'
 
