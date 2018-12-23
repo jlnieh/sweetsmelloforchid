@@ -165,7 +165,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 note_str = line[pos+2:]
                 strContent += '<aside id="n{0}" epub:type="footnote">{1}</aside>'.format(note_id, note_str)
             elif line.startswith('> '):
-                if(len(curPara)<2):
+                if(0 == len(curPara)) or (curPara[-1] != 'p'):
                     strContent += '<p class="poem">'
                     curPara.append('p')
                 strContent += PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', line[2:])
@@ -173,7 +173,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 if(len(curPara)<1):
                     strContent += '<p>'
                     curPara.append('p')
-                strContent += line
+                strContent += PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', line)
     while(len(curPara)>0):
         strContent += '</{0}>\n'.format(curPara.pop())
 
