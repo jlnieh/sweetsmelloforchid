@@ -4,7 +4,7 @@
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
         <dc:identifier id="uid">urn:uuid:3e7fe305-3871-4c59-b088-b78448c2c983</dc:identifier>
         <meta property="dcterms:modified"><!--DATE_MODIFIED--></meta>
-        <meta property="ibooks:version">0.0.5</meta>
+        <meta property="ibooks:version">0.0.9</meta>
         <dc:language>zh-CN</dc:language>
 
         <dc:title id="t1">蘭畹清芬</dc:title>
