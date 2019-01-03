@@ -100,6 +100,16 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
             if len(line) == 0:
                 if(len(curPara)>0) and (curPara[-1] == 'p'):
                     strContent += '</{0}>\n'.format(curPara.pop())
+            elif line.startswith('# '):
+                (pageTitle, pageSubTitle) = splitSubHeader(line[2:])
+                h2_id += 1
+                localHeaderId = '{0}h1{1:02}'.format(pg_id, h2_id)
+                TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(pageTitle, pageSubTitle)))
+                h4_id = 0
+
+                while(len(curPara)>0):
+                    strContent += '</{0}>\n'.format(curPara.pop())
+                strContent += """<header><h2 id="{0}">{1}</h2><p class="subtitle center">{2}</p></header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
             elif line.startswith('## '):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
                 h2_id += 1
