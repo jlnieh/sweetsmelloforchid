@@ -1,22 +1,26 @@
 @namespace epub "http://www.idpf.org/2007/ops";
 
 a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 nav[epub\:type~='landmarks'] {
-	display: none;
-	visibility: hidden;
+    display: none;
+    visibility: hidden;
 }
 
 ol {
-	list-style-type: none;
+    list-style-type: none;
 }
 
 ol > li:first-child {
-	margin-top: 0.3em;
+    margin-top: 0.3em;
+}
+
+ol > li:last-child {
+    margin-bottom: 0.3em;
 }
 
 nav[epub|type~='toc'] > ol > li > ol > li {
-	margin-top: 0.3em;
+    margin-top: 0.3em;
 }
