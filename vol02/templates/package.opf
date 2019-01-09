@@ -53,15 +53,23 @@
         <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
         <item href="img/cover-front.jpg" id="cover-front-img" media-type="image/jpeg" properties="cover-image"/>
         <item href="img/cover-full.jpg" id="cover-full-img" media-type="image/jpeg"/>
+        <item href="img/prefix1.png" id="prefix1-img" media-type="image/png"/>
+        <item href="img/prefix2.png" id="prefix2-img" media-type="image/png"/>
         <item href="css/epub.css" id="css01" media-type="text/css"/>
         <item href="css/nav.css" id="css02" media-type="text/css"/>
         <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>
         <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
+        <item href="prefix1.xhtml" id="prefix1" media-type="application/xhtml+xml"/>
+        <item href="prefix2.xhtml" id="prefix2" media-type="application/xhtml+xml"/>
+        <item href="prefix3.xhtml" id="prefix3" media-type="application/xhtml+xml"/>
         <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
         <!--LIST_MANIFEST-->
     </manifest>
     <spine>
         <itemref idref="cover-front" linear="no"/>
+        <itemref idref="prefix1"/>
+        <itemref idref="prefix2"/>
+        <itemref idref="prefix3"/>
         <itemref idref="title"/>
         <itemref idref="toc"/>
         <!--LIST_SPINE-->
