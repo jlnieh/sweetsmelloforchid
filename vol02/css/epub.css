@@ -24,15 +24,23 @@ p {
 header {
     page-break-after: avoid;
 }
-header h3.poem-title {
+.poem-title {
     margin-bottom: 0;
 }
-header p.poem-date {
+.poem-subtitle {
+    margin-top: 0;
+}
+.poem-author {
+    text-align: right;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 0;
+}
+.poem-date {
     text-align: right;
     font-size: smaller;
     margin-top: 0;
-}
-header p {
+    margin-bottom: 0;
     text-indent: 0;
 }
 aside {
@@ -61,6 +69,7 @@ aside {
     page-break-before: avoid;
     padding-top: 0;
     padding-bottom: 1em;
+    text-indent: 0;
 }
 .signature {
     float: right;

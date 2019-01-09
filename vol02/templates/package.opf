@@ -14,7 +14,7 @@
         <dc:title id="t2">聂懋戡诗词续集</dc:title>
         <meta refines="#t2" property="title-type">subtitle</meta>
         <meta refines="#t2" property="display-seq">2</meta>
-        
+
         <dc:title id="t3">官福光《新华吟草》</dc:title>
         <meta refines="#t3" property="title-type">subtitle</meta>
         <meta refines="#t3" property="display-seq">3</meta>
@@ -31,7 +31,20 @@
         <dc:creator id="creator02">官福光</dc:creator>
         <meta property="file-as" refines="#creator02">Guan, Fu-Guang</meta>
         <meta refines="#creator02" property="role" scheme="marc:relators">aut</meta>
+        <meta refines="#creator02" property="role" scheme="marc:relators">edt</meta>
         <meta refines="#creator02" property="display-seq">2</meta>
+
+        <dc:contributor id="cont01">文奎</dc:contributor>
+        <meta refines="#cont01" property="role" scheme="marc:relators">rev</meta>
+        <dc:contributor id="cont02">张启荪</dc:contributor>
+        <meta refines="#cont02" property="role" scheme="marc:relators">rev</meta>
+        <meta refines="#cont02" property="role" scheme="marc:relators">edt</meta>
+        <dc:contributor id="cont03">曾孔恕</dc:contributor>
+        <meta refines="#cont03" property="role" scheme="marc:relators">edt</meta>
+        <dc:contributor id="cont04">甘光能</dc:contributor>
+        <meta refines="#cont04" property="role" scheme="marc:relators">edt</meta>
+        <dc:contributor id="cont05">田光灿</dc:contributor>
+        <meta refines="#cont05" property="role" scheme="marc:relators">edt</meta>
 
         <dc:publisher>四川省内江市诗词楹联学会</dc:publisher>
         <dc:date>1998-06-30T08:00:00Z</dc:date>
