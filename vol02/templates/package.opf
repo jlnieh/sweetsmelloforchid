@@ -61,16 +61,15 @@
         <item href="cover.xhtml" id="cover-front" media-type="application/xhtml+xml"/>
         <item href="prefix1.xhtml" id="prefix1" media-type="application/xhtml+xml"/>
         <item href="prefix2.xhtml" id="prefix2" media-type="application/xhtml+xml"/>
-        <item href="prefix3.xhtml" id="prefix3" media-type="application/xhtml+xml"/>
         <item href="title.xhtml" id="title" media-type="application/xhtml+xml"/>
         <!--LIST_MANIFEST-->
     </manifest>
     <spine>
         <itemref idref="cover-front" linear="no"/>
+        <itemref idref="title"/>
         <itemref idref="prefix1"/>
         <itemref idref="prefix2"/>
-        <itemref idref="prefix3"/>
-        <itemref idref="title"/>
+        <!--LIST_SPINE_PREV-->
         <itemref idref="toc"/>
         <!--LIST_SPINE-->
         <itemref idref="cover-full" properties="rendition:layout-pre-paginated rendition:orientation-landscape rendition:spread-none"/>

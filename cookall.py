@@ -246,17 +246,23 @@ PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
 PATTERN_BOOKVERSION = '<!--BOOK_VERSION-->'
 PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
 PATTERN_SPINE = '<!--LIST_SPINE-->'
+PATTERN_SPINE_PREV = '<!--LIST_SPINE_PREV-->'
 def generate_opf(src_vol, build_dir):
     str_now = datetime.datetime.utcnow().isoformat(timespec='seconds') + 'Z'
     str_items = ''
     str_itemref = ''
+    str_itemref_prev = ''
     for item in BOOK_ITEMS:
         if '' == str_items:
             lineHeader = ''
         else:
             lineHeader = '\n' + ' ' * 8
         str_items += lineHeader + '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>'.format(item)
-        str_itemref += lineHeader + '<itemref idref="{0}"/>'.format(item)
+
+        if 'p' == item[0]:
+            str_itemref_prev += lineHeader + '<itemref idref="{0}"/>'.format(item)
+        else:
+            str_itemref += lineHeader + '<itemref idref="{0}"/>'.format(item)
 
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_PACKAGEOPF)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
@@ -270,6 +276,8 @@ def generate_opf(src_vol, build_dir):
                 line = line.replace(PATTERN_MANIFEST, str_items)
             elif line.find(PATTERN_SPINE) >= 0:
                 line = line.replace(PATTERN_SPINE, str_itemref)
+            elif line.find(PATTERN_SPINE_PREV) >= 0:
+                line = line.replace(PATTERN_SPINE_PREV, str_itemref_prev)
             fout.write(line)
 
 def package_book(build_dir, target_fn):
