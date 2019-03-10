@@ -55,6 +55,7 @@
         <item href="img/cover-full.jpg" id="cover-full-img" media-type="image/jpeg"/>
         <item href="img/prefix1.png" id="prefix1-img" media-type="image/png"/>
         <item href="img/prefix2.png" id="prefix2-img" media-type="image/png"/>
+        <item href="img/title.png" id="title-img" media-type="image/png"/>
         <item href="css/epub.css" id="css01" media-type="text/css"/>
         <item href="css/nav.css" id="css02" media-type="text/css"/>
         <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>

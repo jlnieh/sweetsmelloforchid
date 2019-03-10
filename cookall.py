@@ -81,6 +81,19 @@ def splitSubHeader(line):
     else:
         return (line, '')
 
+PATTERN_IMAGETITLE=re.compile(r'\!\[(.+)\]\((.+)\)')
+def parseImageTitle(line):
+    result = PATTERN_IMAGETITLE.match(line)
+    if result:
+        return result[1]
+    return line
+
+def getImageTitleTag(line):
+    result = PATTERN_IMAGETITLE.match(line)
+    if result:
+        return """<img src="{0}" alt="{1}" title="{1}"/>""".format(result[2], result[1])
+    return line
+
 PATTERN_PAGETITLE='<!--PAGE_TITLE-->'
 PATTERN_PAGEBODY='<!--PAGE_BODY-->'
 PATTERN_FOOTNOTE=re.compile(r'\[(\d+)\]')
@@ -104,22 +117,22 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[2:])
                 h2_id += 1
                 localHeaderId = '{0}h1{1:02}'.format(pg_id, h2_id)
-                TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(pageTitle, pageSubTitle)))
+                TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(parseImageTitle(pageTitle), pageSubTitle)))
                 h4_id = 0
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<header><h2 id="{0}">{1}</h2><p class="subtitle center">{2}</p></header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
+                strContent += """<header><h2 id="{0}">{1}</h2><p class="subtitle center">{2}</p></header>\n""".format(localHeaderId, getImageTitleTag(pageTitle), pageSubTitle)
             elif line.startswith('## '):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
                 h2_id += 1
                 localHeaderId = '{0}h2{1:02}'.format(pg_id, h2_id)
-                TOC_ITEMS.append((fname_base, localHeaderId, 2, pageTitle))
+                TOC_ITEMS.append((fname_base, localHeaderId, 2, parseImageTitle(pageTitle)))
                 h4_id = 0
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<header><h2 id="{0}">{1}</h2>{2}</header>\n""".format(localHeaderId, pageTitle, pageSubTitle)
+                strContent += """<header><h2 id="{0}">{1}</h2>{2}</header>\n""".format(localHeaderId, getImageTitleTag(pageTitle), pageSubTitle)
             elif line.startswith('### '):
                 strContent += """<h3>{0}</h3>\n""".format(line[4:])
             elif line.startswith('#### '):
@@ -190,7 +203,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
     with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_PAGETITLE) >= 0:
-                line = line.replace(PATTERN_PAGETITLE, pageTitle)
+                line = line.replace(PATTERN_PAGETITLE, parseImageTitle(pageTitle))
             elif line.find(PATTERN_PAGEBODY) >= 0:
                 line = line.replace(PATTERN_PAGEBODY, strContent)
             fout.write(line)
