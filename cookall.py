@@ -117,12 +117,18 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[2:])
                 h2_id += 1
                 localHeaderId = '{0}h1{1:02}'.format(pg_id, h2_id)
-                TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(parseImageTitle(pageTitle), pageSubTitle)))
+                if '## ' == pageSubTitle[0:3]:  # specail case
+                    TOC_ITEMS.append((fname_base, localHeaderId, 2, "{0}".format(pageSubTitle[3:])))
+                else:
+                    TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(parseImageTitle(pageTitle), pageSubTitle)))
                 h4_id = 0
 
                 while(len(curPara)>0):
                     strContent += '</{0}>\n'.format(curPara.pop())
-                strContent += """<header><h2 id="{0}">{1}</h2><p class="subtitle center">{2}</p></header>\n""".format(localHeaderId, getImageTitleTag(pageTitle), pageSubTitle)
+                if '## ' == pageSubTitle[0:3]:  # specail case
+                    strContent += """<header><h1 id="{0}">{1}</h1><h2 class="subtitle">{2}</h2></header>\n""".format(localHeaderId, getImageTitleTag(pageTitle), pageSubTitle[3:])
+                else:
+                    strContent += """<header><h2 id="{0}">{1}</h2><p class="subtitle center">{2}</p></header>\n""".format(localHeaderId, getImageTitleTag(pageTitle), pageSubTitle)
             elif line.startswith('## '):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
                 h2_id += 1
