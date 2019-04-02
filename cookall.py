@@ -233,6 +233,8 @@ def generate_toc(src_vol, build_dir):
     str_items = ''
     cur_lvl = 0
     for item in TOC_ITEMS:
+        if 'p' == item[0][0]:  #skip this item to ToC
+            continue
         if item[2] > cur_lvl:
             if cur_lvl > 0:
                 indentSpace = '\n' + ' ' * (cur_lvl * 2 + 12)
