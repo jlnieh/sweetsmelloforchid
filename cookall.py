@@ -40,6 +40,8 @@ CONSTSTR_METAINFO="""<?xml version="1.0" encoding="UTF-8"?>
 BOOK_ITEMS = []
 TOC_ITEMS = []
 
+LINEBREAK_IN_POEM = False
+
 def prepare_folders(build_dir):
     if not os.path.isdir(FOLDER_BUILD):
         os.makedirs(FOLDER_BUILD)
@@ -197,6 +199,8 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 if(0 == len(curPara)) or (curPara[-1] != 'p'):
                     strContent += '<p class="poem">'
                     curPara.append('p')
+                elif LINEBREAK_IN_POEM:
+                    strContent += '<br/>'
                 strContent += PATTERN_FOOTNOTE.sub(r'<sub><a href="#n\1" epub:type="noteref">\1</a></sub>', line[2:])
             else:
                 if(len(curPara)<1):
@@ -359,6 +363,8 @@ if __name__ == '__main__':
     else:
         VOL_LIST = args.volumes
     for vol in VOL_LIST:
+        if 'vol02' == vol:
+            LINEBREAK_IN_POEM = True
         if os.path.isdir(vol):
             cook_book(vol)
         else:
