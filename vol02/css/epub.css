@@ -2,7 +2,6 @@ body {
     font-family: arial,sans-serif;
     margin: 5% 5% 5% 5%;
     text-align: justify;
-    counter-reset: footnote-counter;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -47,8 +46,7 @@ header {
     text-indent: 0;
 }
 aside:before {
-    counter-increment: footnote-counter;
-    content: "[" counter(footnote-counter) "] ";
+    content: "[" attr(data-footnote-seq) "] ";
 }
 aside {
     margin-top: 0em;

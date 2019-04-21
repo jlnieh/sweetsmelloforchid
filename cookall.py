@@ -194,7 +194,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 pos = line.find('] ')
                 note_id = int(line[1:pos])
                 note_str = line[pos+2:]
-                strContent += '<aside id="n{0}" epub:type="footnote">{1}</aside>'.format(note_id, note_str)
+                strContent += '<aside id="n{0}" data-footnote-seq="{0}" epub:type="footnote">{1}</aside>'.format(note_id, note_str)
             elif line.startswith('> '):
                 if(0 == len(curPara)) or (curPara[-1] != 'p'):
                     strContent += '<p class="poem">'
