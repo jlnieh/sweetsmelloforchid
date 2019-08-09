@@ -235,41 +235,57 @@ def generate_docs(src_vol, build_dir):
             BOOK_ITEMS.append(fbase)
             convert_doc(os.path.join(root, fname), fname_template, build_dir, fbase + '.xhtml')
 
-    BOOK_ITEMS.sort()
+    BOOK_ITEMS.sort(key=lambda x: x[1:3])
 
 PATTERN_TOC = '<!--TOC-->'
+PATTERN_TOC2 = '<!--TOC2-->'
 def generate_toc(src_vol, build_dir):
-    str_items = ''
+    str_items = ['', '']
     cur_lvl = 0
+    cur_sec = 0
     for item in TOC_ITEMS:
         if 'p' == item[0][0]:  #skip this item to ToC
             continue
+
+        if (0 == cur_sec) and ('s11' == item[0][0:3]):  # special for vol02 to seperate TOC into part2
+            if 4 == cur_lvl:
+                str_items[cur_sec] += '</li>\n' + ' ' * 16 + '</ol></li>'
+            elif 2 == cur_lvl:
+                str_items[cur_sec] += '</li>'
+            cur_lvl = 0
+            cur_sec = 1
+
         if item[2] > cur_lvl:
             if cur_lvl > 0:
                 indentSpace = '\n' + ' ' * (cur_lvl * 2 + 12)
-                str_items += indentSpace + '<ol>'
+                str_items[cur_sec] += indentSpace + '<ol>'
         elif item[2] < cur_lvl:
             indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
-            str_items += '</li>' + indentSpace + '</ol></li>'
+            str_items[cur_sec] += '</li>' + indentSpace + '</ol></li>'
         else:
-            str_items += '</li>'
+            str_items[cur_sec] += '</li>'
         indentSpace = '\n' + ' ' * (item[2] * 2 + 12)
-        str_items += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
+        str_items[cur_sec] += indentSpace + '<li><a href="{0}#{1}">{2}</a>'.format(item[0], item[1], item[3])
         cur_lvl = item[2]
+
     if 4 == cur_lvl:
-        indentSpace = '\n' +  ' ' * 16
-        str_items += '</li>' + indentSpace  + '</ol></li>'
+        str_items[cur_sec] += '</li>\n' + ' ' * 16 + '</ol></li>'
     elif 2 == cur_lvl:
-        str_items += '</li>'
-    if '' == str_items:
-        str_items = '<li><a>No title</a></li>'
+        str_items[cur_sec] += '</li>'
+
+    if '' == str_items[0]:
+        str_items[0] = '<li><a>No title</a></li>'
+    if '' == str_items[1]:
+        str_items[1] = '<li><a>No title</a></li>'
 
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_NAV)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_NAV)
     with open(fname_src, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_TOC) >= 0:
-                line = line.replace(PATTERN_TOC, str_items)
+                line = line.replace(PATTERN_TOC, str_items[0])
+            elif line.find(PATTERN_TOC2) >= 0:
+                line = line.replace(PATTERN_TOC2, str_items[1])
             fout.write(line)
 
 PATTERN_MODIFIEDDATETIME = '<!--DATE_MODIFIED-->'
@@ -278,21 +294,27 @@ PATTERN_MANIFEST = '<!--LIST_MANIFEST-->'
 PATTERN_SPINE = '<!--LIST_SPINE-->'
 PATTERN_SPINE_PREV = '<!--LIST_SPINE_PREV-->'
 def generate_opf(src_vol, build_dir):
+    lineHeader = '\n' + ' ' * 8
     str_now = datetime.datetime.utcnow().isoformat(timespec='seconds') + 'Z'
     str_items = ''
     str_itemref = ''
     str_itemref_prev = ''
+    is_prev_ok = True
     for item in BOOK_ITEMS:
-        if '' == str_items:
-            lineHeader = ''
-        else:
-            lineHeader = '\n' + ' ' * 8
-        str_items += lineHeader + '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>'.format(item)
+        if '' != str_items:
+            str_items += lineHeader
+        str_items += '<item href="{0}.xhtml" id="{0}" media-type="application/xhtml+xml"/>'.format(item)
 
-        if 'p' == item[0]:
-            str_itemref_prev += lineHeader + '<itemref idref="{0}"/>'.format(item)
+        if is_prev_ok and 'p' == item[0]:
+            if '' != str_itemref_prev:
+                str_itemref_prev += lineHeader
+            str_itemref_prev += '<itemref idref="{0}"/>'.format(item)
         else:
-            str_itemref += lineHeader + '<itemref idref="{0}"/>'.format(item)
+            if is_prev_ok:
+                is_prev_ok = False
+            if '' != str_itemref:
+                str_itemref += lineHeader
+            str_itemref += '<itemref idref="{0}"/>'.format(item)
 
     fname_src = os.path.join(src_vol, FOLDER_TEMPLATES, FILENAME_PACKAGEOPF)
     fname_dest= os.path.join(build_dir, FOLDER_BOOKROOT, FILENAME_PACKAGEOPF)
