@@ -1,1 +1,1 @@
-##  ![仿宋词](img/chapter06.png)
+## ![仿宋词](img/chapter06.png)
