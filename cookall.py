@@ -90,6 +90,11 @@ def parseImageTitle(line):
         return result[1]
     return line
 
+PATTERN_CLEARHTMLTAG=re.compile('<.*?>')
+def filterPageTitle(line):
+    raw_title = parseImageTitle(line)
+    return PATTERN_CLEARHTMLTAG.sub('', raw_title)
+
 def getImageTitleTag(line):
     result = PATTERN_IMAGETITLE.match(line)
     if result:
@@ -122,7 +127,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 if '## ' == pageSubTitle[0:3]:  # specail case
                     TOC_ITEMS.append((fname_base, localHeaderId, 2, "{0}".format(pageSubTitle[3:])))
                 else:
-                    TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(parseImageTitle(pageTitle), pageSubTitle)))
+                    TOC_ITEMS.append((fname_base, localHeaderId, 2, "{1}《{0}》".format(filterPageTitle(pageTitle), pageSubTitle)))
                 h4_id = 0
 
                 while(len(curPara)>0):
@@ -135,7 +140,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
                 (pageTitle, pageSubTitle) = splitSubHeader(line[3:])
                 h2_id += 1
                 localHeaderId = '{0}h2{1:02}'.format(pg_id, h2_id)
-                TOC_ITEMS.append((fname_base, localHeaderId, 2, parseImageTitle(pageTitle)))
+                TOC_ITEMS.append((fname_base, localHeaderId, 2, filterPageTitle(pageTitle)))
                 h4_id = 0
 
                 while(len(curPara)>0):
@@ -213,7 +218,7 @@ def convert_doc(fname_src, fname_template, build_dir, fname_base):
     with open(fname_template, 'r', encoding='utf-8') as fin, open(fname_dest, 'w', encoding='utf-8') as fout:
         for line in fin:
             if line.find(PATTERN_PAGETITLE) >= 0:
-                line = line.replace(PATTERN_PAGETITLE, parseImageTitle(pageTitle))
+                line = line.replace(PATTERN_PAGETITLE, filterPageTitle(pageTitle))
             elif line.find(PATTERN_PAGEBODY) >= 0:
                 line = line.replace(PATTERN_PAGEBODY, strContent)
             fout.write(line)
