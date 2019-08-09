@@ -57,6 +57,12 @@
         <item href="img/prefix2.png" id="prefix2-img" media-type="image/png"/>
         <item href="img/title.png" id="title-img" media-type="image/png"/>
         <item href="img/title2.png" id="title2-img" media-type="image/png"/>
+        <item href="img/chapter01.png" id="chapter01-img" media-type="image/png"/>
+        <item href="img/chapter02.png" id="chapter02-img" media-type="image/png"/>
+        <item href="img/chapter03.png" id="chapter03-img" media-type="image/png"/>
+        <item href="img/chapter04.png" id="chapter04-img" media-type="image/png"/>
+        <item href="img/chapter05.png" id="chapter05-img" media-type="image/png"/>
+        <item href="img/chapter06.png" id="chapter06-img" media-type="image/png"/>
         <item href="css/epub.css" id="css01" media-type="text/css"/>
         <item href="css/nav.css" id="css02" media-type="text/css"/>
         <item href="cover-full.xhtml" id="cover-full" media-type="application/xhtml+xml"/>

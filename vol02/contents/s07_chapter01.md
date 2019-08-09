@@ -1,4 +1,4 @@
-## 心路类
+## ![心路类](img/chapter01.png)
 
 #### 丁丑迎春曲<small>（十二首）</small>
 <p class="poem-subtitle center">读王成纲词宗步孔凡章翁原玉后赓韵以抒杂感，非袭其意也。</p>
