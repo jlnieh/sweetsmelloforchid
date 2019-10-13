@@ -29,6 +29,7 @@ header {
 }
 .poem-subtitle {
     margin-top: 0;
+    text-indent: 0;
 }
 .poem-author {
     text-align: right;
